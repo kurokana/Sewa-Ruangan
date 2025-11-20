@@ -108,7 +108,7 @@ Database sudah terstruktur dengan baik dan memenuhi standar normalisasi hingga 2
 
 ## 👨‍💻 Dibuat Oleh
 
-Tugas Basis Data Lanjut (BDL) - 2025
+KuroKana - Tugas Basis Data Lanjut (BDL) - 2025
 
 ## 📄 Lisensi
 

@@ -3,7 +3,7 @@ session_start();
 include '../config/db.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = $_POST['password']; // Disarankan SHA256: hash('sha256', $password);
+    $password = $_POST['password']; 
     $result = mysqli_query($conn, "SELECT * FROM owner WHERE username='$username' AND password='" . hash('sha256', $password) . "'");
     if (mysqli_num_rows($result) == 1) {
         $_SESSION['login'] = true;

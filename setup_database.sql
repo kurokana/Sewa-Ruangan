@@ -1,29 +1,22 @@
--- Setup Database untuk Rental BDL
--- Jalankan file ini di MySQL/phpMyAdmin untuk membuat database dan tabel
-
 CREATE DATABASE IF NOT EXISTS rental;
 USE rental;
 
--- Tabel Owner (untuk login admin)
 CREATE TABLE IF NOT EXISTS owner (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
   password VARCHAR(64) NOT NULL
 );
 
--- Tabel Ruangan
 CREATE TABLE IF NOT EXISTS ruangan (
   id_ruangan INT AUTO_INCREMENT PRIMARY KEY,
   nama_ruangan VARCHAR(100) NOT NULL
 );
 
--- Tabel Penyewa
 CREATE TABLE IF NOT EXISTS penyewa (
   id_penyewa INT AUTO_INCREMENT PRIMARY KEY,
   nama_penyewa VARCHAR(100) NOT NULL
 );
 
--- Tabel Penyewaan (Rentals)
 CREATE TABLE IF NOT EXISTS penyewaan (
   id_penyewaan INT AUTO_INCREMENT PRIMARY KEY,
   id_ruangan INT NOT NULL,

@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
 }
 
-// Ambil data ruangan dan penyewa untuk dropdown
 $ruangan = mysqli_query($conn, "SELECT * FROM ruangan ORDER BY nama_ruangan");
 $penyewa = mysqli_query($conn, "SELECT * FROM penyewa ORDER BY nama_penyewa");
 

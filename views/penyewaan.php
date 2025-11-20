@@ -4,7 +4,6 @@ if (!isset($_SESSION['login'])) { header("Location: ../auth/login.php"); exit; }
 include '../config/db.php';
 include '../partials/header.php';
 
-// Query dengan JOIN untuk menampilkan nama ruangan dan penyewa
 $result = mysqli_query($conn, "
   SELECT p.*, r.nama_ruangan, py.nama_penyewa 
   FROM penyewaan p

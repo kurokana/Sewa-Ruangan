@@ -29,5 +29,3 @@ CREATE TABLE IF NOT EXISTS penyewaan (
 );
 
 INSERT INTO owner (username, password) VALUES ('admin', SHA2('admin123', 256));
-
--

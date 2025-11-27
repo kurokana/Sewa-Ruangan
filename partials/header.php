@@ -1,6 +1,5 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) { /* session already started in pages */ }
-// Determine base path
+if (session_status() == PHP_SESSION_NONE) {}
 $base = dirname($_SERVER['SCRIPT_NAME']);
 $inViews = strpos($base, '/views') !== false || strpos($base, '\\views') !== false;
 $inActions = strpos($base, '/actions') !== false || strpos($base, '\\actions') !== false;

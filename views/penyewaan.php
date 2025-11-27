@@ -24,18 +24,28 @@ $result = mysqli_query($conn, "
           <th class="px-4 py-2">Penyewa</th>
           <th class="px-4 py-2">Tanggal Mulai</th>
           <th class="px-4 py-2">Tanggal Selesai</th>
+          <th class="px-4 py-2">Status</th>
           <th class="px-4 py-2">Keterangan</th>
           <th class="px-4 py-2">Aksi</th>
         </tr>
       </thead>
       <tbody>
-      <?php while ($row = mysqli_fetch_assoc($result)): ?>
+      <?php while ($row = mysqli_fetch_assoc($result)): 
+        $status_aktif = strtotime($row['tanggal_selesai']) >= time();
+      ?>
         <tr class="border-t text-sm">
           <td class="px-4 py-2"><?= $row['id_penyewaan'] ?></td>
           <td class="px-4 py-2"><?= $row['nama_ruangan'] ?></td>
           <td class="px-4 py-2"><?= $row['nama_penyewa'] ?></td>
           <td class="px-4 py-2"><?= date('d/m/Y H:i', strtotime($row['tanggal_mulai'])) ?></td>
           <td class="px-4 py-2"><?= date('d/m/Y H:i', strtotime($row['tanggal_selesai'])) ?></td>
+          <td class="px-4 py-2">
+            <?php if ($status_aktif): ?>
+              <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Aktif</span>
+            <?php else: ?>
+              <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">Selesai</span>
+            <?php endif; ?>
+          </td>
           <td class="px-4 py-2"><?= $row['keterangan'] ? substr($row['keterangan'], 0, 50) . '...' : '-' ?></td>
           <td class="px-4 py-2">
             <a href="../actions/edit_penyewaan.php?id=<?= $row['id_penyewaan'] ?>" class="text-blue-600 hover:underline">Edit</a>

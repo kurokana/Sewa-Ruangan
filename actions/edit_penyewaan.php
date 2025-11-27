@@ -7,6 +7,8 @@ $id = $_GET['id'];
 $data = mysqli_query($conn, "SELECT * FROM penyewaan WHERE id_penyewaan=$id");
 $row = mysqli_fetch_assoc($data);
 
+$error = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_ruangan = $_POST['id_ruangan'];
     $id_penyewa = $_POST['id_penyewa'];
@@ -14,24 +16,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tanggal_selesai = $_POST['tanggal_selesai'];
     $keterangan = $_POST['keterangan'];
     
-    mysqli_query($conn, "UPDATE penyewaan SET 
-                         id_ruangan='$id_ruangan', 
-                         id_penyewa='$id_penyewa', 
-                         tanggal_mulai='$tanggal_mulai', 
-                         tanggal_selesai='$tanggal_selesai', 
-                         keterangan='$keterangan' 
-                         WHERE id_penyewaan=$id");
-    header("Location: ../views/penyewaan.php");
-    exit;
+    // Cek apakah ruangan sedang disewa oleh penyewaan lain (bukan penyewaan ini)
+    $cek = mysqli_query($conn, "SELECT * FROM penyewaan 
+                                WHERE id_ruangan='$id_ruangan' 
+                                AND id_penyewaan != $id
+                                AND tanggal_selesai >= NOW()");
+    
+    if (mysqli_num_rows($cek) > 0) {
+        $error = "Ruangan ini sedang disewa oleh penyewaan lain!";
+    } else {
+        mysqli_query($conn, "UPDATE penyewaan SET 
+                             id_ruangan='$id_ruangan', 
+                             id_penyewa='$id_penyewa', 
+                             tanggal_mulai='$tanggal_mulai', 
+                             tanggal_selesai='$tanggal_selesai', 
+                             keterangan='$keterangan' 
+                             WHERE id_penyewaan=$id");
+        header("Location: ../views/penyewaan.php");
+        exit;
+    }
 }
 
-$ruangan = mysqli_query($conn, "SELECT * FROM ruangan ORDER BY nama_ruangan");
+// Query ruangan yang tersedia ATAU ruangan yang sedang dipakai oleh penyewaan ini
+$ruangan = mysqli_query($conn, "
+    SELECT r.* 
+    FROM ruangan r
+    WHERE NOT EXISTS (
+        SELECT 1 FROM penyewaan p 
+        WHERE p.id_ruangan = r.id_ruangan 
+        AND p.tanggal_selesai >= NOW()
+        AND p.id_penyewaan != $id
+    )
+    ORDER BY r.nama_ruangan
+");
+
 $penyewa = mysqli_query($conn, "SELECT * FROM penyewa ORDER BY nama_penyewa");
 
 include '../partials/header.php';
 ?>
 <div class="max-w-2xl bg-white shadow rounded p-6">
   <h2 class="text-xl font-semibold mb-4">Edit Penyewaan</h2>
+  
+  <?php if ($error): ?>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <?= $error ?>
+    </div>
+  <?php endif; ?>
+  
   <form method="POST" class="space-y-3">
     <div>
       <label class="block text-sm font-medium">Ruangan</label>
@@ -43,6 +74,7 @@ include '../partials/header.php';
           </option>
         <?php endwhile; ?>
       </select>
+      <p class="text-xs text-gray-500 mt-1">*Hanya menampilkan ruangan yang tersedia</p>
     </div>
     <div>
       <label class="block text-sm font-medium">Penyewa</label>
